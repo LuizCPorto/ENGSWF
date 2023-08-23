@@ -125,6 +125,31 @@ class Grafo:
         else:
             print("O grafo não é bipartido.")
 
+    def bipartir(self, matriz, vertice, cores):
+        cores[vertice] = 1
+
+        fila = deque()
+        fila.append(vertice)
+
+        while fila:
+            vertice_atual = fila.popleft()
+
+            for i in range(len(matriz)):
+                if matriz[vertice_atual][i] == 1 and cores[i] == -1:
+                    cores[i] = 1 - cores[vertice_atual]
+                    fila.append(i)
+                elif matriz[vertice_atual][i] == 1 and cores[i] == cores[vertice_atual]:
+                    return False
+
+        return True
+
+    def validar_matriz_adjacencia(self, matriz):
+        num_vertices = len(matriz)
+        for linha in matriz:
+            if len(linha) != num_vertices:
+                return False
+        return True
+
 # Função para exibir o menu
 def exibir_menu():
     print("Escolha uma opção:")
