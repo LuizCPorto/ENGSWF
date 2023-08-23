@@ -79,6 +79,52 @@ class Grafo:
             if matriz[vertice][i] == 1 and not visitados[i]:
                 self.dfs(matriz, i, visitados)
 
+    def buscar_largura(self, matriz, vertice_inicial):
+        if not self.validar_matriz_adjacencia(matriz):
+            print("Matriz de adjacência inválida.")
+            return
+
+        num_vertices = len(matriz)
+        visitados = [False] * num_vertices
+        fila = deque()
+
+        # Marca o vértice inicial como visitado e adiciona na fila
+        visitados[vertice_inicial] = True
+        fila.append(vertice_inicial)
+
+        while fila:
+            vertice_atual = fila.popleft()
+            print(vertice_atual, end=" ")
+
+            for i in range(num_vertices):
+                if matriz[vertice_atual][i] == 1 and not visitados[i]:
+                    visitados[i] = True
+                    fila.append(i)
+
+    def encontrar_biparticao(self, matriz):
+        if not self.validar_matriz_adjacencia(matriz):
+            print("Matriz de adjacência inválida.")
+            return
+
+        num_vertices = len(matriz)
+        cores = [-1] * num_vertices
+        bipartido = True
+
+        for vertice in range(num_vertices):
+            if cores[vertice] == -1:
+                bipartido &= self.bipartir(matriz, vertice, cores)
+
+        if bipartido:
+            print("O grafo é bipartido.")
+            grupos = {}
+            for i in range(num_vertices):
+                if cores[i] not in grupos:
+                    grupos[cores[i]] = []
+                grupos[cores[i]].append(i)
+            print("Grupos:", grupos)
+        else:
+            print("O grafo não é bipartido.")
+
 # Função para exibir o menu
 def exibir_menu():
     print("Escolha uma opção:")
