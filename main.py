@@ -24,6 +24,60 @@ class Grafo:
                 matrizes.append(matriz_atual)
         return matrizes
     
+    def adicionar_aresta(self, matriz, origem, destino):
+        matriz[origem][destino] = 1
+        matriz[destino][origem] = 1
+
+    def plotar_grafo(self, matriz):
+        if not self.validar_matriz_adjacencia(matriz):
+            print("Matriz de adjacência inválida.")
+            return
+
+        G = nx.Graph()
+
+        # Adiciona os vértices ao grafo
+        num_vertices = len(matriz)
+        G.add_nodes_from(range(num_vertices))
+
+        # Adiciona as arestas ao grafo
+        for i in range(num_vertices):
+            for j in range(i + 1, num_vertices):
+                if matriz[i][j] == 1:
+                    G.add_edge(i, j)
+
+        # Plota o grafo
+        pos = nx.spring_layout(G)
+        nx.draw(
+            G,
+            pos,
+            with_labels=True,
+            node_color='skyblue',
+            node_size=500,
+            edge_color='black',
+            linewidths=1,
+            font_size=10
+        )
+        plt.show()
+
+    def verificar_conexo(self, matriz):
+        if not self.validar_matriz_adjacencia(matriz):
+            print("Matriz de adjacência inválida.")
+            return False
+
+        num_vertices = len(matriz)
+        visitados = [False] * num_vertices
+
+        # Faz uma busca em profundidade a partir do vértice 0
+        self.dfs(matriz, 0, visitados)
+
+        # Verifica se todos os vértices foram visitados
+        return all(visitados)
+
+    def dfs(self, matriz, vertice, visitados):
+        visitados[vertice] = True
+        for i in range(len(matriz)):
+            if matriz[vertice][i] == 1 and not visitados[i]:
+                self.dfs(matriz, i, visitados)
 
 # Função para exibir o menu
 def exibir_menu():
